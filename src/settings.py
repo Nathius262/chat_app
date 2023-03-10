@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     'user',
+    'chat',
 
 
     'allauth',
