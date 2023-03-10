@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import datetime
 
 load_dotenv()
 
@@ -41,11 +42,27 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    'user',
+
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+    'rest_framework_simplejwt',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -120,8 +137,110 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL = 'media/'
+STATIC_ROOT = os.path.join(BASE_DIR, "files", "static_cdn")
+MEDIA_ROOT = os.path.join(BASE_DIR, "files", "media_cdn")
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "files", "static/"),
+    os.path.join(BASE_DIR, "files", "media/")
+)
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+##########################
+##########################
+## my custome settings ###
+##########################
+##########################
+
+AUTH_USER_MODEL = "user.CustomUser"
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'some_random_text')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'some_random_text')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', False)
+EMAIL_PORT = os.environ.get('EMAIL_PORT', 'some_random_text')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'some_random_text') #sender's email-id
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'some_random_text')
+SERVER_EMAIL = os.environ.get('SERVER_EMAIL', 'some_random_text')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'some_random_text') #password associated with above email-id
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    #'backend.user.authentication.CustomModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+    
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+REST_USE_JWT = True
+
+SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES": ["BEARER"],
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(seconds=30),
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(minutes=1),
+}
+
+#ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED =True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_UNIQUE_EMAIL = True
+
+#ACCOUNT_FORMS = {'signup': 'backend.user.forms.RegistrationForm'}
+#ACCOUNT_USERNAME_MIN_LENGTH = 10
+
+ACCOUNT_EMAIL_REQUIRED = True
+
+# REST_AUTH_REGISTER_SERIALIZERS ={
+#     'REGISTER_SERIALIZER': 'user.serializers.RegisterSerializer'
+# }
+
+# REST_AUTH_SERIALIZERS ={
+#     "LOGIN_SERIALIZER": 'user.serializers.LoginSerializer'
+# }
+
+###############
+###############
+#####
+##### DJANGO CORES HEADER
+#####
+###############
+###############
+CORS_URLS_REGEX = r"^/api/.*$"
+
+CORS_ALLOWED_ORIGINS = []
+
+if DEBUG:
+    CORS_ALLOWED_ORIGINS += [
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",
+    ]  
+
+#APPEND_SLASH=False
+
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
+
+CORS_ALLOW_HEADERS = [
+    "Content-Type",
+]
