@@ -10,8 +10,8 @@ class Friend(models.Model):
         return str(self.user)
 
 class Message(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user_message")
-    message_to = models.CharField(max_length=500, blank=False, null=True)
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user_message")
+    receiver = models.CharField(max_length=500, blank=False, null=True)
     message = models.TextField(max_length=50000, blank=False, null=True)
     message_date = models.DateTimeField(auto_now_add=True)
 
