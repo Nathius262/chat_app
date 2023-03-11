@@ -21,4 +21,4 @@ class Message(models.Model):
         )
 
     def __str__(self):
-        return str(self.user)
+        return str(self.sender)

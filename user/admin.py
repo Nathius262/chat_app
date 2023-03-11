@@ -10,7 +10,7 @@ class GroupAdmin(admin.ModelAdmin):
     list_display = ['name', 'user', 'date_created']
 
 class GroupPaticipantAdmin(admin.ModelAdmin):
-    list_display = ['group', 'user', 'date_joined', 'is_admin']
+    list_display = ['group', 'date_joined', 'is_admin']
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(CustomGroup, GroupAdmin)

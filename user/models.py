@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from .manager import CustomUserManager
 import os
+from django.urls import reverse
 from django.conf import settings
 
 
@@ -61,9 +62,12 @@ class CustomGroup(models.Model):
 
 class GroupPaticipant(models.Model):
     group = models.ForeignKey(CustomGroup, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     is_admin = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
 
     def  __str__(self):
         return str(self.group)
+    
+    def get_url(self):
+        return reverse('user:group_paticipant', args=[self.id])

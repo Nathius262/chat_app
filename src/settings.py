@@ -184,6 +184,9 @@ AUTHENTICATION_BACKENDS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PREMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
     )
 }
 
@@ -191,8 +194,8 @@ REST_USE_JWT = True
 
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ["BEARER"],
-    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(seconds=30),
-    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(minutes=1),
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(minutes=30),
 }
 
 #ACCOUNT_USER_MODEL_USERNAME_FIELD = None
@@ -244,4 +247,5 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOW_HEADERS = [
     "Content-Type",
+    "Authorization",
 ]
