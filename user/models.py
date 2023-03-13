@@ -42,6 +42,14 @@ class CustomUser(AbstractBaseUser):
 
     objects = CustomUserManager()
 
+    @property
+    def picture_url(self):
+        try:
+            picture = self.picture.url
+        except :
+            picture =""
+        return picture
+
     def __str__(self):
         return self.username
 

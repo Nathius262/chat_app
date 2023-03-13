@@ -194,8 +194,8 @@ REST_USE_JWT = True
 
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ["BEARER"],
-    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(minutes=5),
-    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(minutes=30),
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(minutes=40),
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(hours=72),
 }
 
 #ACCOUNT_USER_MODEL_USERNAME_FIELD = None

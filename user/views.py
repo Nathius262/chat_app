@@ -3,7 +3,6 @@ from .serializers import CustomGroupSerializers, GroupPaticipantSerializers
 from .models import CustomGroup, GroupPaticipant
 from rest_framework.response import Response
 from rest_framework.viewsets import generics, mixins
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 class CustomGroupViewSet(generics.ListAPIView):
