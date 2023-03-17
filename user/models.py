@@ -67,6 +67,15 @@ class CustomGroup(models.Model):
 
     def __str__(self):
         return self.name
+    
+    @property
+    def image_url(self):
+        try:
+            image = self.image.url
+        except :
+            image =""
+        return image
+
 
 class GroupPaticipant(models.Model):
     group = models.ForeignKey(CustomGroup, on_delete=models.CASCADE)
