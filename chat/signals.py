@@ -1,43 +1,46 @@
 from .models import Message, Friend
-from user.models import GroupPaticipant, CustomUser, CustomGroup
 from django.db.models.signals import pre_save
 from rest_framework import exceptions
 from django.db.models import Q
 
-def checkMessage(sender, instance, *args, **kwargs):
-    
-    try:
-        user = CustomUser.objects.get(username=instance.sender)
-        friend = CustomUser.objects.get(username=instance.receiver)
-        Friend.objects.all().filter(user=user, friend=friend).exists()
-    except CustomUser.DoesNotExist:    
-        try:
-            group = CustomGroup.objects.get(name=instance.receiver)
-            GroupPaticipant.objects.all().filter(group=group, user=user).exists()
-        except CustomGroup.DoesNotExist:
-            raise exceptions.ValidationError(f'friends with {instance.message} or group does not exist')
-
-
-#pre_save.connect(checkMessage, sender=Message)
-
 def createMessage(sender, instance, *args, **kwargs):
+    """
+    this function is a signal sent to the Message model 
+    for sender and receiver validation
+    """
     user = instance.sender
-    friend = Q(friend=instance.receiver.friend) | Q(friend=instance.receiver.user)
-    print(friend)
+    friend1 = instance.receiver.friend
+    friend2 = instance.receiver.user
 
-    lookup1 = Q(user=user) & Q(friend=friend)
+    # checking if the sender is in one of the friend 
+    # instance else raise an error
+    if user == friend1:
+        friend = friend2
+    elif user == friend2:
+        friend = friend1
+    else:
+        raise exceptions.ValidationError(f'{user} and ({instance.receiver.friend} or {instance.receiver.user}) are not friends')
+    
+    #quering the sender and the receiver from the friend object 
+    # if they exits else raise error
+    lookup1 = Q(user=user) & Q(friend=friend)    
     lookup2 = Q(user=friend) & Q(friend=user)
+    
     lookup = Q(lookup1 | lookup2)
     qs = Friend.objects.filter(lookup)
-    if qs.exists():
-        pass
-    else:
+    
+    if not(qs.exists()):
         raise exceptions.ValidationError(f'{user} and ({instance.receiver.friend} or {instance.receiver.user}) are not friends')
 
 def createFriend(sender, instance, *args, **kwargs):
+    
+    """
+    this function is a signal sent to the Friend model 
+    to validation the user and friend before saving to the database.
+    """
+
     user = instance.user
     friend = instance.friend
-    print(user, friend)
     if user == friend:
         raise exceptions.ValidationError(f"{user} and {friend} cannot be friends")
 

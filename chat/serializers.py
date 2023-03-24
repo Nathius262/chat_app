@@ -3,18 +3,25 @@ from .models import Message, Friend
 from user.models import CustomUser as User, CustomGroup as Group
 import json
 
+class MessagePostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        exclude = ['id']
+
 
 class MessageSerailizers(serializers.ModelSerializer):
-
-    sender = serializers.SerializerMethodField()
-    #receiver = serializers.SerializerMethodField()
+    sender = serializers.SerializerMethodField("get_sender")
+    receiver = serializers.SerializerMethodField("get_receiver")
     
     class Meta:
         model = Message
         exclude = ['id',]
 
     def get_sender(self, obj):
-        return obj.sender.username
+        return str(obj.sender)
+    
+    def get_receiver(self, obj):
+        return str(obj.receiver)
     
  
 
