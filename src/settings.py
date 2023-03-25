@@ -92,7 +92,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'src.wsgi.application'
+#WSGI_APPLICATION = 'src.wsgi.application'
+ASGI_APPLICATION = 'src.asgi.application'
 
 
 # Database
